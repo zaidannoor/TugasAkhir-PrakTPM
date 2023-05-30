@@ -90,7 +90,9 @@ class _HomePageState extends State<HomePage> {
       ),
       backgroundColor: Color(0xff27374D),
       bottomNavigationBar: BottomNavigationBar(
-        // backgroundColor: Color(0xff526D82),
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Color(0xff27374D),
+        backgroundColor: Colors.black,
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
@@ -135,25 +137,73 @@ class _HomePageState extends State<HomePage> {
       itemBuilder: (BuildContext context, int index) {
         final movie = movies[index];
         return GridTile(
-          child: InkWell(
-              child: Image.network(movie.poster),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        DetailMoviePage(id: movie.imdbID, judul: movie.title),
-                  ),
-                );
-              }),
-          footer: GridTileBar(
-            backgroundColor: Color.fromRGBO(75, 75, 75, 1),
-            title: Text(
-              movie.title,
-              textAlign: TextAlign.center,
-            ),
+            child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DetailMoviePage(id: movie.imdbID, judul: movie.title),
+                ));
+          },
+          child: Stack(
+            children: [
+              movie.poster != 'N/A'
+                  ? Image.network(
+                      movie.poster,
+                      height: 300,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
+                      height: 300,
+                      width: double.infinity,
+                      color: Colors.grey,
+                    ),
+              Container(
+                height: 300,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                      Colors.transparent,
+                      Colors.transparent,
+                      Colors.black
+                    ])),
+              ),
+              Positioned(
+                  bottom: 16,
+                  left: 16,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 200,
+                        child: Text(
+                          movie.title,
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Container(
+                        width: 200,
+                        child: Text(
+                          movie.year,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ))
+            ],
           ),
-        );
+        ));
       },
     );
   }
